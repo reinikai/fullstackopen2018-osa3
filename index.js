@@ -28,11 +28,23 @@ app.get('/api/persons', (req, res) => {
     res.json(persons)
 })
 
+app.get('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
+    const person = persons.find(p => p.id === id)
+
+    if (person) {
+        response.json(person)
+    } else {
+        response.status(404).end()
+    }
+})
+
 app.get('/info', (req, res) => {
     const lkm = 'Luettelossa on ' + persons.length + ' henkilön tiedot.'
     const pvm = new Date()
     res.status(200).send('<p>' + lkm + '</p><p>' + pvm + '</p>')
 })
+
 
 const PORT = 3001
 app.listen(PORT, () => {
