@@ -24,9 +24,13 @@ let persons = [
     }
 ]
 
-
 app.get('/api/persons', (req, res) => {
     res.json(persons)
+})
+
+app.get('/info', (req, res) => {
+    const body = 'Luettelossa on ' + persons.length + ' henkilön tiedot.'
+    res.status(200).send(body)
 })
 
 const PORT = 3001
