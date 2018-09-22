@@ -29,8 +29,9 @@ app.get('/api/persons', (req, res) => {
 })
 
 app.get('/info', (req, res) => {
-    const body = 'Luettelossa on ' + persons.length + ' henkilön tiedot.'
-    res.status(200).send(body)
+    const lkm = 'Luettelossa on ' + persons.length + ' henkilön tiedot.'
+    const pvm = new Date()
+    res.status(200).send('<p>' + lkm + '</p><p>' + pvm + '</p>')
 })
 
 const PORT = 3001
