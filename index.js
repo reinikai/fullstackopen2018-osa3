@@ -40,8 +40,16 @@ function generateId(min, max) {
 app.post('/api/persons', (request, response) => {
     const body = request.body
 
-    if (undefined === body.name || undefined === body.number) {
-        return response.status(400).json({error: 'content missing'})
+    if (undefined === body.name) {
+        return response.status(400).json({error: 'name missing'})
+    }
+
+    if (undefined === body.number) {
+        return response.status(400).json({error: 'number missing'})
+    }
+
+    if (persons.find(p => p.name === body.name)) {
+        return response.status(400).json({error: 'name already in db'})
     }
 
     const person = {
