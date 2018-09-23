@@ -53,6 +53,7 @@ class App extends React.Component {
         personService
             .read()
             .then(response => {
+                console.log(response);
                 this.setState({persons: response.data})
             })
     }
