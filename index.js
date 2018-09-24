@@ -27,6 +27,7 @@ app.get('/api/persons', (request, response) => {
             response.json(result)
         })
         .catch(error => {
+            console.log(error)
             response.status(400).send({ error: 'list failed' })
         })
 })
@@ -53,6 +54,7 @@ app.post('/api/persons', (request, response) => {
             response.json(savedPerson)
         })
         .catch(error => {
+            console.log(error)
             response.status(400).send({ error: 'save failed' })
         })
 })
@@ -64,6 +66,7 @@ app.get('/api/persons/:id', (request, response) => {
             response.json(person)
         })
         .catch(error => {
+            console.log(error)
             response.status(400).send({ error: 'malformatted id' })
         })
 })
@@ -75,6 +78,7 @@ app.delete('/api/persons/:id', (request, response) => {
             response.status(204).end()
         })
         .catch(error => {
+            console.log(error)
             response.status(400).send({ error: 'malformatted id' })
         })
 })
