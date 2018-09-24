@@ -59,10 +59,8 @@ app.post('/api/persons', (request, response) => {
 })
 
 app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-
     Person
-        .findById(id)
+        .findById(request.params.id)
         .then(person => {
             response.json(person)
         })
@@ -72,10 +70,8 @@ app.get('/api/persons/:id', (request, response) => {
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-
     Person
-        .findByIdAndRemove(id)
+        .findByIdAndRemove(request.params.id)
         .then(result => {
             response.status(204).end()
         })
@@ -87,7 +83,7 @@ app.delete('/api/persons/:id', (request, response) => {
 app.get('/info', (request, response) => {
     const lkm = 'Luettelossa on ' + persons.length + ' henkilön tiedot.'
     const pvm = new Date()
-    res.status(200).send('<p>' + lkm + '</p><p>' + pvm + '</p>')
+    response.status(200).send('<p>' + lkm + '</p><p>' + pvm + '</p>')
 })
 
 

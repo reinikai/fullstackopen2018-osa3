@@ -66,7 +66,7 @@ class App extends React.Component {
     }
 
     handleDelete = (id) => {
-        const name = this.state.persons.find(p => p.id === id).name
+        const name = this.state.persons.find(p => p._id === id).name
 
         if (window.confirm('Poistetaanko varmasti ' + name + '?')) {
             personService
@@ -126,7 +126,7 @@ class App extends React.Component {
                 <h2>Numerot</h2>
                 <table>
                     <tbody>
-                        {this.state.persons.map(person => <Person key={person.name} person={person} handler={() => this.handleDelete(person.id)} />)}
+                        {this.state.persons.map(person => <Person key={person.name} person={person} handler={() => this.handleDelete(person._id)} />)}
                     </tbody>
                 </table>
             </div>
