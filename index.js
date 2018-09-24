@@ -9,23 +9,26 @@ const mongoose = require('mongoose')
 app.use(express.static('build'))
 app.use(cors())
 app.use(bodyParser.json())
-app.use(morgan(function (tokens, req, res) {
+app.use(morgan(function (tokens, request, response) {
     return [
-        tokens.method(req, res),
-        JSON.stringify(req.body),
-        tokens.url(req, res),
-        tokens.status(req, res),
-        tokens.res(req, res, 'content-length'), '-',
-        tokens['response-time'](req, res), 'ms'
+        tokens.method(request, response),
+        JSON.stringify(request.body),
+        tokens.url(request, response),
+        tokens.status(request, response),
+        tokens.res(request, response, 'content-length'), '-',
+        tokens['response-time'](request, response), 'ms'
     ].join(' ')
 }))
 
-app.get('/api/persons', (req, res) => {
+app.get('/api/persons', (request, response) => {
     Person
         .find({})
         .then(result => {
-            res.json(result)
+            response.json(result)
             mongoose.connection.close()
+        })
+        .catch(error => {
+            response.status(400).send({ error: 'list failed' })
         })
 })
 
@@ -50,6 +53,9 @@ app.post('/api/persons', (request, response) => {
         .then(savedPerson => {
             response.json(savedPerson)
         })
+        .catch(error => {
+            response.status(400).send({ error: 'save failed' })
+        })
 })
 
 app.get('/api/persons/:id', (request, response) => {
@@ -59,6 +65,9 @@ app.get('/api/persons/:id', (request, response) => {
         .findById(id)
         .then(person => {
             response.json(person)
+        })
+        .catch(error => {
+            response.status(400).send({ error: 'malformatted id' })
         })
 })
 
@@ -75,7 +84,7 @@ app.delete('/api/persons/:id', (request, response) => {
         })
 })
 
-app.get('/info', (req, res) => {
+app.get('/info', (request, response) => {
     const lkm = 'Luettelossa on ' + persons.length + ' henkilön tiedot.'
     const pvm = new Date()
     res.status(200).send('<p>' + lkm + '</p><p>' + pvm + '</p>')
