@@ -1,9 +1,9 @@
 const express = require('express')
 const app = express()
-const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors')
+const Person = require('./models/person')
 
 app.use(express.static('build'))
 app.use(cors())
@@ -19,38 +19,14 @@ app.use(morgan(function (tokens, req, res) {
     ].join(' ')
 }))
 
-let persons = [
-    {
-        id: 1,
-        name: 'Arto Hellas',
-        number: '040-31337',
-    },
-    {
-        id: 2,
-        name: 'Pelle Peloton',
-        number: '050-6047',
-    },
-    {
-        id: 3,
-        name: 'Niilo Nimetön',
-        number: '044-123456',
-    },
-    {
-        id: 4,
-        name: 'Erkki Esimerkki',
-        number: '041-654321',
-    }
-]
-
 app.get('/api/persons', (req, res) => {
-    res.json(persons)
+    Person
+        .find({})
+        .then(result => {
+            res.json(result)
+            mongoose.connection.close()
+        })
 })
-
-function generateId(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
 
 app.post('/api/persons', (request, response) => {
     const body = request.body
@@ -63,30 +39,26 @@ app.post('/api/persons', (request, response) => {
         return response.status(400).json({error: 'number missing'})
     }
 
-    if (persons.find(p => p.name === body.name)) {
-        return response.status(400).json({error: 'name already in db'})
-    }
-
-    const person = {
+    const person = new Person({
         name: body.name,
-        number: body.number,
-        id: generateId(1, 604731337)
-    }
+        number: body.number
+    })
 
-    persons = persons.concat(person)
-
-    response.json(person)
+    person
+        .save()
+        .then(savedPerson => {
+            response.json(savedPerson)
+        })
 })
 
 app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
-    const person = persons.find(p => p.id === id)
 
-    if (person) {
-        response.json(person)
-    } else {
-        response.status(404).end()
-    }
+    Person
+        .findById(id)
+        .then(person => {
+            response.json(person)
+        })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
