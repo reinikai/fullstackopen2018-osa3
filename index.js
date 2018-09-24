@@ -25,7 +25,6 @@ app.get('/api/persons', (request, response) => {
         .find({})
         .then(result => {
             response.json(result)
-            mongoose.connection.close()
         })
         .catch(error => {
             response.status(400).send({ error: 'list failed' })
@@ -52,7 +51,6 @@ app.post('/api/persons', (request, response) => {
         .save()
         .then(savedPerson => {
             response.json(savedPerson)
-            mongoose.connection.close()
         })
         .catch(error => {
             response.status(400).send({ error: 'save failed' })
@@ -64,7 +62,6 @@ app.get('/api/persons/:id', (request, response) => {
         .findById(request.params.id)
         .then(person => {
             response.json(person)
-            mongoose.connection.close()
         })
         .catch(error => {
             response.status(400).send({ error: 'malformatted id' })
@@ -76,7 +73,6 @@ app.delete('/api/persons/:id', (request, response) => {
         .findByIdAndRemove(request.params.id)
         .then(result => {
             response.status(204).end()
-            mongoose.connection.close()
         })
         .catch(error => {
             response.status(400).send({ error: 'malformatted id' })
